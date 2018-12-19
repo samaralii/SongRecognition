@@ -9,7 +9,6 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.ScrollingMovementMethod
@@ -86,12 +85,8 @@ class TestActivity : Activity(), RecognitionListener {
         test_volumeController.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-                Log.d("PERCENTAGE", "Max volume $maxVolume")
-                Log.d("PERCENTAGE", "Current Count $p1")
                 val a: Double = maxVolume.toDouble() / 100.0
-                Log.d("PERCENTAGE", "A $a")
                 val percentage: Double = a * p1.toDouble()
-                Log.d("PERCENTAGE", "Percentage $percentage")
                 test_tvVolumePrecentage.text = "$p1%"
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, percentage.toInt(), AudioManager.FLAG_SHOW_UI)
             }
@@ -308,9 +303,8 @@ class TestActivity : Activity(), RecognitionListener {
         resultText = ""
     }
 
-    override fun onResult(hypothesis: Hypothesis) {
+    override fun onResult(hypothesis: Hypothesis?) {
         Log.d("VOICE_TAG", "onResult")
-
     }
 
     override fun onError(e: Exception) {

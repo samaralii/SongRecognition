@@ -2,15 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
-    >
+    android:background="#262626"
+    android:padding="5dp">
 
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:hint="Word"
         android:id="@+id/test_etWord"
+        android:background="@android:color/white"
+        android:paddingLeft="10dp"
         />
 
 
@@ -19,10 +21,11 @@
         android:layout_height="wrap_content"
         android:text="Set Volume"
         android:textSize="18sp"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         />
 
     <SeekBar
+        android:background="@android:color/white"
         android:id="@+id/test_volumeController"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:text="50%"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         />
 
     <RadioGroup
@@ -67,8 +70,8 @@
 
     </RadioGroup>
 
-
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -127,19 +130,20 @@
     <EditText
         android:id="@+id/test_etThreshold"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:hint="Threshold Value"
         android:inputType="number"
+        android:paddingLeft="10dp"
+        android:background="@android:color/white"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Set the value between 1 to 50"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:layout_marginBottom="5dp"
         />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -175,9 +179,6 @@
 
     </LinearLayout>
 
-
-
-
     <ProgressBar
         android:visibility="invisible"
         android:layout_width="20dp"
@@ -185,7 +186,6 @@
         android:layout_gravity="center"
         android:id="@+id/test_progress"
         />
-
 
     <FrameLayout
         android:background="#ffffff"
@@ -228,7 +228,6 @@
 
     </FrameLayout>
 
-
     <TextView
         android:id="@+id/test_tvStatus"
         android:layout_width="wrap_content"
@@ -246,11 +245,9 @@
         android:textColor="@android:color/black"
         />
 
-
-
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="60dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -276,6 +273,22 @@
 
     </FrameLayout>
 
+
+    <EditText
+        android:id="@+id/test_selectFile"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@android:color/white"
+        android:drawableLeft="@drawable/ic_action_file"
+        android:drawablePadding="10dp"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:enabled="false"
+        android:hint="Select Audio File" />
 
 
 
