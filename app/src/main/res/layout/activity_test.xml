@@ -22,7 +22,24 @@
         android:textColor="@android:color/black"
         />
 
+    <SeekBar
+        android:id="@+id/test_volumeController"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="50"
+        />
+
+    <TextView
+        android:id="@+id/test_tvVolumePrecentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="50%"
+        android:textColor="@android:color/black"
+        />
+
     <RadioGroup
+        android:visibility="gone"
         android:id="@+id/test_rg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

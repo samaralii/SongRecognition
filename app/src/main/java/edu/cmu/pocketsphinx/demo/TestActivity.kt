@@ -1,6 +1,7 @@
 package edu.cmu.pocketsphinx.demo
 
 import android.Manifest
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -14,6 +15,7 @@ import android.text.TextWatcher
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
+import android.widget.SeekBar
 import android.widget.TextView
 import edu.cmu.pocketsphinx.Assets
 import edu.cmu.pocketsphinx.Hypothesis
@@ -27,7 +29,7 @@ import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
 
-class TestActivity : AppCompatActivity(), RecognitionListener {
+class TestActivity : Activity(), RecognitionListener {
 
     companion object {
         private const val PERMISSIONS_REQUEST_RECORD_AUDIO = 1
@@ -71,6 +73,7 @@ class TestActivity : AppCompatActivity(), RecognitionListener {
         val vol = max / 2
         Log.d("VOICE_TAG", vol.toString() + "")
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, AudioManager.FLAG_SHOW_UI)
+        test_tvVolumePrecentage.text = "50%"
 
 
         val permissionCheck = ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.RECORD_AUDIO)
@@ -80,6 +83,26 @@ class TestActivity : AppCompatActivity(), RecognitionListener {
         }
 
 
+        test_volumeController.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                Log.d("PERCENTAGE", "Max volume $maxVolume")
+                Log.d("PERCENTAGE", "Current Count $p1")
+                val a: Double = maxVolume.toDouble() / 100.0
+                Log.d("PERCENTAGE", "A $a")
+                val percentage: Double = a * p1.toDouble()
+                Log.d("PERCENTAGE", "Percentage $percentage")
+                test_tvVolumePrecentage.text = "$p1%"
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, percentage.toInt(), AudioManager.FLAG_SHOW_UI)
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+            }
+
+        })
 
         test_btnStop.setOnClickListener { btnStop() }
 
