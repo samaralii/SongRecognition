@@ -1,2 +1,2 @@
-include ':app', ':models', ':wear', ':aars'
+include ':app', ':models', ':aars'
 
