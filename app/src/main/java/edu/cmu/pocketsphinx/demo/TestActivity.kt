@@ -2,6 +2,7 @@ package edu.cmu.pocketsphinx.demo
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -166,6 +167,14 @@ class TestActivity : Activity(), RecognitionListener {
             }
         })
 
+
+        test_selectFile.setOnClickListener {
+
+            val i = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(i, 10)
+
+        }
+
     }
 
     private fun setResultText(s: String) {
@@ -175,17 +184,21 @@ class TestActivity : Activity(), RecognitionListener {
 
     private fun btnStart() {
 
-        stopProcess()
 
-        if (checkThresholdVal()) {
-            test_progress.show()
-            SetupTask(this).execute()
-        }
+        startService(Intent(this, BackgroundService::class.java))
+
+//        stopProcess()
+//
+//        if (checkThresholdVal()) {
+//            test_progress.show()
+//            SetupTask(this).execute()
+//        }
 
     }
 
 
     private fun btnStop() {
+        stopService(Intent(this, BackgroundService::class.java))
         setStatus(1)
         stopProcess()
     }

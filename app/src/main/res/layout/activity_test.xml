@@ -286,8 +286,8 @@
         android:drawablePadding="10dp"
         android:lines="1"
         android:maxLines="1"
+        android:editable="false"
         android:paddingLeft="10dp"
-        android:enabled="false"
         android:hint="Select Audio File" />
 
 
