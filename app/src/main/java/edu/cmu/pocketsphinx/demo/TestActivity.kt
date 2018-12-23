@@ -2,14 +2,20 @@ package edu.cmu.pocketsphinx.demo
 
 import android.Manifest
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.CursorLoader
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.ScrollingMovementMethod
@@ -22,6 +28,8 @@ import edu.cmu.pocketsphinx.Hypothesis
 import edu.cmu.pocketsphinx.RecognitionListener
 import edu.cmu.pocketsphinx.SpeechRecognizer
 import edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup
+import edu.cmu.pocketsphinx.demo.utils.BROADCAST_ACTION
+import edu.cmu.pocketsphinx.demo.utils.gone
 import edu.cmu.pocketsphinx.demo.utils.hide
 import edu.cmu.pocketsphinx.demo.utils.show
 import kotlinx.android.synthetic.main.activity_test.*
@@ -58,10 +66,26 @@ class TestActivity : Activity(), RecognitionListener {
             return word.toLowerCase()
         }
 
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+
+            val isProcessStop = intent.getIntExtra(BackgroundService.PROCESS_STOPPED, 0)
+
+            if (isProcessStop == 1) {
+                showStartButton(true)
+            }
+
+        }
+    }
+
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
 
+
+        showStartButton(true)
+        showPlayButton(true)
 
         test_tvResults.movementMethod = ScrollingMovementMethod()
 
@@ -170,12 +194,72 @@ class TestActivity : Activity(), RecognitionListener {
 
         test_selectFile.setOnClickListener {
 
-            val i = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(i, 10)
+            //            val i = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
+//            startActivityForResult(i, 10)
+
+            if (mediaPlayer != null) {
+                mediaPlayer?.stop()
+                mediaPlayer?.release()
+                mediaPlayer = null
+            }
+
+            showPlayButton(true)
+
+            val audioIntent = Intent()
+            audioIntent.type = "audio/*"
+            audioIntent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(audioIntent, 10)
+
+        }
+
+
+
+        test_btnPlay.setOnClickListener {
+
+            if (mediaPlayer != null) {
+                mediaPlayer?.start()
+                showPlayButton(false)
+            }
+
+        }
+
+        test_btnMpStop.setOnClickListener {
+
+            if (mediaPlayer != null) {
+                mediaPlayer?.stop()
+                mediaPlayer?.release()
+                mediaPlayer = null
+            }
+
+            showPlayButton(true)
+
 
         }
 
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != RESULT_OK || data == null || data.getData() == null) {
+            // error
+            return
+        }
+
+        val soundUri = data.data
+
+        try {
+
+            mediaPlayer = MediaPlayer.create(this, soundUri)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+
 
     private fun setResultText(s: String) {
         test_tvResults.text = s
@@ -185,22 +269,50 @@ class TestActivity : Activity(), RecognitionListener {
     private fun btnStart() {
 
 
-        startService(Intent(this, BackgroundService::class.java))
 
-//        stopProcess()
-//
-//        if (checkThresholdVal()) {
-//            test_progress.show()
-//            SetupTask(this).execute()
-//        }
+        val isBackground = test_swBackground.isChecked
+
+        if (checkThresholdVal()) {
+
+            if (isBackground) {
+
+                val i = Intent(this, BackgroundService::class.java)
+                i.putExtra(BackgroundService.BG_WORD, word)
+                i.putExtra(BackgroundService.BG_THRESHOLD, "1e-${threshold}f")
+                startService(i)
+
+
+            } else {
+
+                stopProcess()
+
+                test_progress.show()
+                SetupTask(this).execute()
+            }
+
+            showStartButton(false)
+
+
+        }
 
     }
 
 
     private fun btnStop() {
-        stopService(Intent(this, BackgroundService::class.java))
-        setStatus(1)
-        stopProcess()
+
+        val isBackground = test_swBackground.isChecked
+
+        if (isBackground) {
+            stopService(Intent(this, BackgroundService::class.java))
+        } else {
+            setStatus(1)
+            stopProcess()
+        }
+
+
+        showStartButton(true)
+
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -223,6 +335,8 @@ class TestActivity : Activity(), RecognitionListener {
     public override fun onDestroy() {
         super.onDestroy()
 
+        unregisterReceiver(broadcastReceiver)
+
         recognizer?.let {
             it.cancel()
             it.shutdown()
@@ -237,26 +351,26 @@ class TestActivity : Activity(), RecognitionListener {
 
     private fun switchSearch() {
 
-        if (testFlag == 1) {
-
-            mediaPlayer = MediaPlayer.create(this@TestActivity, R.raw.hello)
-            mediaPlayer!!.seekTo(13000)
-            mediaPlayer!!.start()
-
-        } else if (testFlag == 2) {
-
-            mediaPlayer = MediaPlayer.create(this@TestActivity, R.raw.song2)
-            mediaPlayer!!.seekTo(25000)
-            mediaPlayer!!.start()
-
-        } else {
-
-            if (mediaPlayer != null) {
-                mediaPlayer!!.stop()
-                mediaPlayer = null
-            }
-
-        }
+//        if (testFlag == 1) {
+//
+//            mediaPlayer = MediaPlayer.create(this@TestActivity, R.raw.hello)
+//            mediaPlayer!!.seekTo(13000)
+//            mediaPlayer!!.start()
+//
+//        } else if (testFlag == 2) {
+//
+//            mediaPlayer = MediaPlayer.create(this@TestActivity, R.raw.song2)
+//            mediaPlayer!!.seekTo(25000)
+//            mediaPlayer!!.start()
+//
+//        } else {
+//
+//            if (mediaPlayer != null) {
+//                mediaPlayer!!.stop()
+//                mediaPlayer = null
+//            }
+//
+//        }
 
 
         setStatus(2)
@@ -294,6 +408,7 @@ class TestActivity : Activity(), RecognitionListener {
         if (text == word) {
             setStatus(3)
             stopProcess()
+            showStartButton(true)
         }
 
 
@@ -343,6 +458,11 @@ class TestActivity : Activity(), RecognitionListener {
             }
 
             threshold = test_etThreshold.text.toString()
+            test_etThreshold.error = null
+
+        } else {
+            test_etThreshold.error = "Required Field"
+            return false
         }
 
         value = "1e-${threshold}f".toFloat()
@@ -410,6 +530,7 @@ class TestActivity : Activity(), RecognitionListener {
                 val assetDir = assets.syncAssets()
                 activityReference.get()!!.setupRecognizer(assetDir)
             } catch (e: IOException) {
+                (activityReference).get()!!.showStartButton(true)
                 return e
             }
 
@@ -422,10 +543,42 @@ class TestActivity : Activity(), RecognitionListener {
 
             if (result != null) {
                 (activityReference.get()!!.findViewById<View>(R.id.test_tvStatus) as TextView).text = "Failed to init recognizer $result"
+                (activityReference).get()!!.showStartButton(true)
             } else {
                 activityReference.get()!!.switchSearch()
             }
         }
+    }
+
+    private fun showStartButton(show: Boolean) {
+        if (show) {
+            test_btnStart.show()
+            test_btnStop.gone()
+        } else {
+            test_btnStart.gone()
+            test_btnStop.show()
+        }
+    }
+
+
+    private fun showPlayButton(show: Boolean) {
+        if (show) {
+            test_btnPlay.show()
+            test_btnMpStop.gone()
+        } else {
+            test_btnPlay.gone()
+            test_btnMpStop.show()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+//        unregisterReceiver(broadcastReceiver)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(broadcastReceiver, IntentFilter(BROADCAST_ACTION))
     }
 
 }

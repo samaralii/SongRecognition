@@ -4,6 +4,9 @@ import android.content.Context
 import android.view.View
 import android.widget.Toast
 
+const val BROADCAST_ACTION = "edu.cmu.pocketsphinx.demo"
+
+
 fun View.hide() {
     this.visibility = View.INVISIBLE
 }

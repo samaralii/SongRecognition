@@ -1,295 +1,348 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
     android:background="#262626"
-    android:padding="5dp">
+    >
 
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:hint="Word"
-        android:id="@+id/test_etWord"
-        android:background="@android:color/white"
-        android:paddingLeft="10dp"
-        />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Set Volume"
-        android:textSize="18sp"
-        android:textColor="@android:color/white"
-        />
-
-    <SeekBar
-        android:background="@android:color/white"
-        android:id="@+id/test_volumeController"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:progress="50"
-        />
-
-    <TextView
-        android:id="@+id/test_tvVolumePrecentage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="50%"
-        android:textColor="@android:color/white"
-        />
-
-    <RadioGroup
-        android:visibility="gone"
-        android:id="@+id/test_rg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-        <RadioButton
-            android:id="@+id/test_vol25"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="25 %"
-            android:textSize="20sp"
-            />
-
-        <RadioButton
-            android:id="@+id/test_vol50"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="50 %"
-            android:textSize="20sp"
-            />
-
-
-    </RadioGroup>
 
     <LinearLayout
-        android:visibility="gone"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:padding="5dp">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Word"
+            android:id="@+id/test_etWord"
+            android:background="@android:color/white"
+            android:paddingLeft="10dp"
+            />
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Test Sample"
+            android:text="Set Volume"
             android:textSize="18sp"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
+            />
+
+        <SeekBar
+            android:background="@android:color/white"
+            android:id="@+id/test_volumeController"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="50"
+            />
+
+        <TextView
+            android:id="@+id/test_tvVolumePrecentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="50%"
+            android:textColor="@android:color/white"
             />
 
         <RadioGroup
-            android:id="@+id/test_rgVoice"
+            android:visibility="gone"
+            android:id="@+id/test_rg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
 
             <RadioButton
-                android:id="@+id/test_rbSong1"
+                android:id="@+id/test_vol25"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Song 1"
-                android:textSize="18sp"
+                android:text="25 %"
+                android:textSize="20sp"
                 />
 
             <RadioButton
-                android:id="@+id/test_rbSong2"
+                android:id="@+id/test_vol50"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Song 2"
-                android:textSize="18sp"
-
-                />
-
-            <RadioButton
-                android:id="@+id/test_rbVoice"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Voice Only"
-                android:textSize="18sp"
-
+                android:text="50 %"
+                android:textSize="20sp"
                 />
 
 
         </RadioGroup>
 
-
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/test_etThreshold"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:hint="Threshold Value"
-        android:inputType="number"
-        android:paddingLeft="10dp"
-        android:background="@android:color/white"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Set the value between 1 to 50"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="5dp"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        >
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="Start"
-            android:layout_gravity="center"
-            android:id="@+id/test_btnStart"
-            android:background="#46b92f"
-            android:textColor="@android:color/white"
-            android:textAllCaps="false"
-            android:layout_marginRight="5dp"
-            />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="Stop"
-            android:layout_gravity="center"
-            android:id="@+id/test_btnStop"
-            android:background="#ff0008"
-            android:textColor="@android:color/white"
-            android:textAllCaps="false"
-            />
-
-
-
-    </LinearLayout>
-
-    <ProgressBar
-        android:visibility="invisible"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:id="@+id/test_progress"
-        />
-
-    <FrameLayout
-        android:background="#ffffff"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/test_tvListening"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Listening..."
-            android:textSize="18sp"
-            android:textColor="@android:color/holo_red_light"
-            />
-
-        <TextView
-            android:id="@+id/test_tvMatched"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Word Matched"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_green_dark"
-            />
-
-
-        <TextView
-            android:id="@+id/test_tvPressStart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Press start to begin testing"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_blue_dark"
-            />
-
-
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/test_tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Status"
-        android:textSize="24sp"
-        android:visibility="gone"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This is what pocket sphinx is listening"
-        android:textColor="@android:color/black"
-        />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
-
-        <TextView
+        <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:background="#cacaca"
-            android:id="@+id/test_tvResults"
-            android:textColor="@android:color/black"
-            android:maxLines="15"
-            />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test Sample"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                />
+
+            <RadioGroup
+                android:id="@+id/test_rgVoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <RadioButton
+                    android:id="@+id/test_rbSong1"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Song 1"
+                    android:textSize="18sp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/test_rbSong2"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Song 2"
+                    android:textSize="18sp"
+
+                    />
+
+                <RadioButton
+                    android:id="@+id/test_rbVoice"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Voice Only"
+                    android:textSize="18sp"
+
+                    />
 
 
-        <Button
-            android:id="@+id/test_btnClear"
-            android:layout_width="50dp"
+            </RadioGroup>
+
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/test_etThreshold"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="clear"
-            android:textAllCaps="false"
-            android:background="#fff"
-            android:layout_gravity="bottom|end"
+            android:hint="Threshold Value"
+            android:inputType="number"
+            android:paddingLeft="10dp"
+            android:background="@android:color/white"
             />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set the value between 1 to 50"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="5dp"
+            />
 
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Start"
+                android:layout_gravity="center"
+                android:id="@+id/test_btnStart"
+                android:background="#46b92f"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Stop"
+                android:layout_gravity="center"
+                android:id="@+id/test_btnStop"
+                android:background="#ff0008"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                />
 
 
-    <EditText
-        android:id="@+id/test_selectFile"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:background="@android:color/white"
-        android:drawableLeft="@drawable/ic_action_file"
-        android:drawablePadding="10dp"
-        android:lines="1"
-        android:maxLines="1"
-        android:editable="false"
-        android:paddingLeft="10dp"
-        android:hint="Select Audio File" />
+
+        </FrameLayout>
+
+        <Switch
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start In Background"
+            android:textColor="@android:color/white"
+            android:id="@+id/test_swBackground"
+            android:checked="false"
+            />
+
+        <ProgressBar
+            android:visibility="invisible"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:id="@+id/test_progress"
+            />
+
+        <FrameLayout
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/test_tvListening"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Listening..."
+                android:textSize="18sp"
+                android:textColor="@android:color/holo_red_light"
+                />
+
+            <TextView
+                android:id="@+id/test_tvMatched"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Word Matched"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_green_dark"
+                />
+
+
+            <TextView
+                android:id="@+id/test_tvPressStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Press start to begin testing"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_blue_dark"
+                />
+
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/test_tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Status"
+            android:textSize="24sp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This is what pocket sphinx is listening"
+            android:textColor="@android:color/black"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:background="#cacaca"
+                android:id="@+id/test_tvResults"
+                android:textColor="@android:color/black"
+                android:maxLines="15"
+                />
+
+
+            <Button
+                android:id="@+id/test_btnClear"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:text="clear"
+                android:textAllCaps="false"
+                android:background="#fff"
+                android:layout_gravity="bottom|end"
+                />
+
+
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/test_selectFile"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@android:color/white"
+            android:drawableLeft="@drawable/ic_action_file"
+            android:drawablePadding="10dp"
+            android:lines="1"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:hint="Select Audio File" />
 
 
 
-</LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Play"
+                android:layout_gravity="left"
+                android:id="@+id/test_btnPlay"
+                android:background="#46b92f"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Stop"
+                android:layout_gravity="left"
+                android:id="@+id/test_btnMpStop"
+                android:background="#ff0008"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                />
+
+
+        </FrameLayout>
+
+
+
+
+    </LinearLayout>
+
+</ScrollView>

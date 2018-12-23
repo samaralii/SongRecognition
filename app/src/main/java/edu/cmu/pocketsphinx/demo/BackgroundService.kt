@@ -1,71 +1,98 @@
 package edu.cmu.pocketsphinx.demo
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationCompat.*
 import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
 import edu.cmu.pocketsphinx.*
+import edu.cmu.pocketsphinx.demo.utils.BROADCAST_ACTION
 import java.io.File
-import android.media.RingtoneManager
-
-
 
 
 class BackgroundService: Service(), RecognitionListener {
 
+
+    companion object {
+        const val PROCESS_STOPPED = "process_stopped"
+        const val BG_WORD = "bg_word"
+        const val BG_THRESHOLD= "bg_threshold"
+    }
+
     private var recognizer: SpeechRecognizer? = null
-    private val word = "start"
 
 
-    private val notification_id = "update_status_1"
+    private val CHANNEL_ID = "update_status_1"
+    private val NOTIFICATION_ID = 1
     private val notification_title = "PocketSphinx Status"
     private val notification_description = "Listening..."
-    private val importance by lazy { NotificationManagerCompat.IMPORTANCE_HIGH }
+    private val importance by lazy { NotificationManagerCompat.IMPORTANCE_MAX }
 
     private val mNotificationManager by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
-    private val notification by lazy { NotificationCompat.Builder(this, notification_id) }
+    private val notification by lazy { NotificationCompat.Builder(this, CHANNEL_ID) }
+
+    private var intent: Intent? = null
+
+
+    private var word = "start"
+    private var threshold = 1e-45f
+
+
+
 
 
     private fun setupNotification() {
 
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_action_file)
 
-        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val intent = Intent(this, TestActivity::class.java).apply {
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
         notification.apply {
             setSmallIcon(R.drawable.ic_action_file)
             setLargeIcon(bitmap)
             setContentTitle(notification_title)
             setContentText(notification_description)
+            setContentIntent(pendingIntent)
+            setDefaults(DEFAULT_ALL)
             priority = importance
-            setSound(soundUri)
+            setOngoing(true)
+            setAutoCancel(true)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val mChannel = NotificationChannel(notification_id, notification_title, importance)
+            val mChannel = NotificationChannel(CHANNEL_ID, notification_title, importance)
             mNotificationManager.createNotificationChannel(mChannel)
         }
 
-        mNotificationManager.notify(1, notification.build())
+//        mNotificationManager.notify(1, notification.build())
+
+        with(NotificationManagerCompat.from(this)){
+            notify(NOTIFICATION_ID, notification.build())
+        }
+
     }
 
-    private fun successNotification() {
+    private fun successNotification(str: String) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val mChannel = NotificationChannel(notification_id, notification_title, importance)
+            val mChannel = NotificationChannel(CHANNEL_ID, notification_title, importance)
             mNotificationManager.createNotificationChannel(mChannel)
         }
 
         notification.apply {
             setSmallIcon(R.drawable.ic_action_file)
-            setContentText("Word Matched")
+            setOngoing(false)
+            setContentText("Word Matched : $str")
         }
 
         mNotificationManager.notify(1, notification.build())
@@ -74,12 +101,13 @@ class BackgroundService: Service(), RecognitionListener {
     private fun errorNotification() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val mChannel = NotificationChannel(notification_id, notification_title, importance)
+            val mChannel = NotificationChannel(CHANNEL_ID, notification_title, importance)
             mNotificationManager.createNotificationChannel(mChannel)
         }
 
         notification.apply {
             setSmallIcon(R.drawable.ic_action_file)
+            setOngoing(false)
             setContentText("Error, Please try again.")
         }
 
@@ -96,11 +124,19 @@ class BackgroundService: Service(), RecognitionListener {
     override fun onCreate() {
         super.onCreate()
         Log.d("BG_SERVICE", "onCreate")
+        intent = Intent(BROADCAST_ACTION)
     }
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("BG_SERVICE", "onStartCommand")
+
+        intent?.let {
+            word = it.getStringExtra(BG_WORD)
+            threshold = it.getStringExtra(BG_THRESHOLD).toFloat()
+            Log.d("BG_SERVICE", "Word : $word || Threshold : $threshold")
+        }
+
         setupNotification()
 
         try {
@@ -125,6 +161,7 @@ class BackgroundService: Service(), RecognitionListener {
                 .setAcousticModel(File(assetDir, "en-us-ptm"))
                 .setDictionary(File(assetDir, "cmudict-en-us.dict"))
                 .setBoolean("-allphone_ci", true)
+                .setKeywordThreshold(threshold)
                 .recognizer
 
         recognizer?.addListener(this)
@@ -155,9 +192,9 @@ class BackgroundService: Service(), RecognitionListener {
 
         if (text == word) {
             Log.d("BG_SERVICE", "onPartialResult DETECTED $text")
-            successNotification()
+            successNotification(text)
+            onStopVr()
             stopProcess()
-            stopSelf()
         }
 
 
@@ -186,17 +223,17 @@ class BackgroundService: Service(), RecognitionListener {
         }
     }
 
-
-    private fun showNotification() {
-
-
-    }
-
-
     override fun onDestroy() {
+        mNotificationManager.cancelAll()
         stopProcess()
         Log.d("BG_SERVICE", "onDestroy")
         super.onDestroy()
+    }
+
+
+    private fun onStopVr() {
+        intent?.putExtra(PROCESS_STOPPED, 1)
+        sendBroadcast(intent)
     }
 
 
