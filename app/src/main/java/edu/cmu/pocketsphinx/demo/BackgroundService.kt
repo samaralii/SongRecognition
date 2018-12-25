@@ -52,7 +52,7 @@ class BackgroundService: Service(), RecognitionListener {
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_action_file)
 
         val intent = Intent(this, TestActivity::class.java).apply {
-//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
@@ -193,7 +193,7 @@ class BackgroundService: Service(), RecognitionListener {
         if (text == word) {
             Log.d("BG_SERVICE", "onPartialResult DETECTED $text")
             successNotification(text)
-            onStopVr()
+            onStopVr(text)
             stopProcess()
         }
 
@@ -231,8 +231,9 @@ class BackgroundService: Service(), RecognitionListener {
     }
 
 
-    private fun onStopVr() {
+    private fun onStopVr(str: String) {
         intent?.putExtra(PROCESS_STOPPED, 1)
+        intent?.putExtra(BG_WORD, str)
         sendBroadcast(intent)
     }
 

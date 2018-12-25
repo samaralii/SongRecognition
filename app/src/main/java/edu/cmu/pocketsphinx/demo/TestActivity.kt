@@ -70,9 +70,11 @@ class TestActivity : Activity(), RecognitionListener {
         override fun onReceive(context: Context, intent: Intent) {
 
             val isProcessStop = intent.getIntExtra(BackgroundService.PROCESS_STOPPED, 0)
+            val wordStr = intent.getStringExtra(BackgroundService.BG_WORD)
 
             if (isProcessStop == 1) {
                 showStartButton(true)
+                test_tvResults.text = wordStr
             }
 
         }
@@ -96,7 +98,7 @@ class TestActivity : Activity(), RecognitionListener {
 
         val vol = max / 2
         Log.d("VOICE_TAG", vol.toString() + "")
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, AudioManager.FLAG_SHOW_UI)
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0)
         test_tvVolumePrecentage.text = "50%"
 
 
@@ -113,7 +115,7 @@ class TestActivity : Activity(), RecognitionListener {
                 val a: Double = maxVolume.toDouble() / 100.0
                 val percentage: Double = a * p1.toDouble()
                 test_tvVolumePrecentage.text = "$p1%"
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, percentage.toInt(), AudioManager.FLAG_SHOW_UI)
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, percentage.toInt(), 0)
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
@@ -139,13 +141,13 @@ class TestActivity : Activity(), RecognitionListener {
 
                 val volume = Math.abs(max / 3)
                 Log.d("VOICE_TAG", vol.toString() + "")
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI)
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
 
             } else if (checkedId == test_vol25.id) {
 
                 val volume = max / 2
                 Log.d("VOICE_TAG", vol.toString() + "")
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI)
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
 
             }
         }

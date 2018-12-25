@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:background="#262626"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     >
 
 
@@ -20,6 +22,8 @@
             android:hint="Word"
             android:id="@+id/test_etWord"
             android:background="@android:color/white"
+            android:textColor="@android:color/black"
+            android:textColorHint="#737373"
             android:paddingLeft="10dp"
             />
 
@@ -143,6 +147,8 @@
             android:inputType="number"
             android:paddingLeft="10dp"
             android:background="@android:color/white"
+            android:textColor="@android:color/black"
+            android:textColorHint="#737373"
             />
 
         <TextView
@@ -259,7 +265,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="This is what pocket sphinx is listening"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             />
 
         <FrameLayout
@@ -299,6 +305,8 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:background="@android:color/white"
+            android:textColor="@android:color/black"
+            android:textColorHint="#767676"
             android:drawableLeft="@drawable/ic_action_file"
             android:drawablePadding="10dp"
             android:lines="1"
