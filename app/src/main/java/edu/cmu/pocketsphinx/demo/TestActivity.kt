@@ -61,7 +61,8 @@ class TestActivity : Activity(), RecognitionListener {
                 word = test_etWord!!.text.toString()
             }
 
-            return word.toLowerCase()
+//            return word.toLowerCase()
+            return word
         }
 
     private val broadcastReceiver = object : BroadcastReceiver() {
