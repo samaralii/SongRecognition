@@ -196,6 +196,16 @@
             android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Second Dictionary"
+            android:textColor="@android:color/white"
+            android:id="@+id/test_swDict"
+            android:checked="false"
+            />
+
+        <Switch
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="Start In Background"
             android:textColor="@android:color/white"
             android:id="@+id/test_swBackground"

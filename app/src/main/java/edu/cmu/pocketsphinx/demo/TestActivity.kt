@@ -9,13 +9,10 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.CursorLoader
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.ScrollingMovementMethod
@@ -53,6 +50,7 @@ class TestActivity : Activity(), RecognitionListener {
     private val audioManager by lazy { applicationContext.getSystemService(AUDIO_SERVICE) as AudioManager }
 
     private var testFlag = 0
+    private var secDict = false
 
     private val word: String
         get() {
@@ -273,6 +271,7 @@ class TestActivity : Activity(), RecognitionListener {
 
 
         val isBackground = test_swBackground.isChecked
+        secDict = test_swDict.isChecked
 
         if (checkThresholdVal()) {
 
@@ -281,6 +280,7 @@ class TestActivity : Activity(), RecognitionListener {
                 val i = Intent(this, BackgroundService::class.java)
                 i.putExtra(BackgroundService.BG_WORD, word)
                 i.putExtra(BackgroundService.BG_THRESHOLD, "1e-${threshold}f")
+                i.putExtra(BackgroundService.BG_DICT, secDict)
                 startService(i)
 
 
@@ -480,7 +480,7 @@ class TestActivity : Activity(), RecognitionListener {
 
         recognizer = defaultSetup()
                 .setAcousticModel(File(assetsDir, "en-us-ptm"))
-                .setDictionary(File(assetsDir, "cmudict-en-us.dict"))
+                .setDictionary(getDicFile(assetsDir))
                 .setKeywordThreshold(value)
                 .setBoolean("-allphone_ci", true)
                 .recognizer
@@ -490,6 +490,13 @@ class TestActivity : Activity(), RecognitionListener {
         recognizer?.addKeyphraseSearch(word, word)
 
     }
+
+    private fun getDicFile(assetsDir: File) =  if (secDict) {
+        File(assetsDir, "sec_dict.dict")
+    } else {
+        File(assetsDir, "cmudict-en-us.dict")
+    }
+
 
     private fun setStatus(status: Int) {
 

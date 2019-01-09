@@ -23,6 +23,7 @@ class BackgroundService: Service(), RecognitionListener {
         const val PROCESS_STOPPED = "process_stopped"
         const val BG_WORD = "bg_word"
         const val BG_THRESHOLD= "bg_threshold"
+        const val BG_DICT = "bg_dict"
     }
 
     private var recognizer: SpeechRecognizer? = null
@@ -33,6 +34,8 @@ class BackgroundService: Service(), RecognitionListener {
     private val notification_title = "PocketSphinx Status"
     private val notification_description = "Listening..."
     private val importance by lazy { NotificationManagerCompat.IMPORTANCE_MAX }
+    private var secDict = false
+
 
     private val mNotificationManager by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
     private val notification by lazy { NotificationCompat.Builder(this, CHANNEL_ID) }
@@ -134,7 +137,8 @@ class BackgroundService: Service(), RecognitionListener {
         intent?.let {
             word = it.getStringExtra(BG_WORD)
             threshold = it.getStringExtra(BG_THRESHOLD).toFloat()
-            Log.d("BG_SERVICE", "Word : $word || Threshold : $threshold")
+            secDict = it.getBooleanExtra(BG_DICT, false)
+            Log.d("BG_SERVICE", "Word : $word || Threshold : $threshold || DICT : $secDict")
         }
 
         setupNotification()
@@ -159,7 +163,8 @@ class BackgroundService: Service(), RecognitionListener {
 
         recognizer = SpeechRecognizerSetup.defaultSetup()
                 .setAcousticModel(File(assetDir, "en-us-ptm"))
-                .setDictionary(File(assetDir, "cmudict-en-us.dict"))
+//                .setDictionary(File(assetDir, "cmudict-en-us.dict"))
+                .setDictionary(getDicFile(assetDir))
                 .setBoolean("-allphone_ci", true)
                 .setKeywordThreshold(threshold)
                 .recognizer
@@ -235,6 +240,12 @@ class BackgroundService: Service(), RecognitionListener {
         intent?.putExtra(PROCESS_STOPPED, 1)
         intent?.putExtra(BG_WORD, str)
         sendBroadcast(intent)
+    }
+
+    private fun getDicFile(assetsDir: File) =  if (secDict) {
+        File(assetsDir, "sec_dict.dict")
+    } else {
+        File(assetsDir, "cmudict-en-us.dict")
     }
 
 
