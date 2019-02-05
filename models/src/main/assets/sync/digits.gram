@@ -1,6 +1,17 @@
-up /1e-1/
-down /1e-1/
-left /1e-1/
-right /1e-1/
-forwards /1e-1/
-backwards /1e-1/
+#JSGF V1.0;
+
+grammar digits;
+
+<digit> = oh    |
+          zero  |
+          one   |
+          two   |
+          three |
+          four  |
+          five  |
+          six   |
+          seven |
+          eight |
+          nine  ;
+
+public <digits> = <digit>+;
