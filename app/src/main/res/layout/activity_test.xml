@@ -27,6 +27,16 @@
             android:paddingLeft="10dp"
             />
 
+        <Switch
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search From Grammer"
+            android:textColor="@android:color/white"
+            android:id="@+id/test_grammer"
+            android:checked="false"
+            />
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -192,15 +202,6 @@
 
         </FrameLayout>
 
-        <Switch
-            android:padding="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Second Dictionary"
-            android:textColor="@android:color/white"
-            android:id="@+id/test_swDict"
-            android:checked="false"
-            />
 
         <Switch
             android:padding="5dp"

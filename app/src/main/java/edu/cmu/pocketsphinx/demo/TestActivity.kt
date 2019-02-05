@@ -46,11 +46,12 @@ class TestActivity : Activity(), RecognitionListener {
     private var resultText = ""
     private var threshold = "45"
     internal var value = 1e-45f
+    private val DIGITS_SEARCH = "digits"
+
 
     private val audioManager by lazy { applicationContext.getSystemService(AUDIO_SERVICE) as AudioManager }
 
     private var testFlag = 0
-    private var secDict = false
 
     private val word: String
         get() {
@@ -78,6 +79,8 @@ class TestActivity : Activity(), RecognitionListener {
         }
     }
 
+
+    private var grammerSearch = false
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,6 +154,14 @@ class TestActivity : Activity(), RecognitionListener {
         }
 
 
+        test_grammer.setOnCheckedChangeListener{ _, checkId ->
+
+
+            grammerSearch = checkId
+
+
+        }
+
 
         test_rgVoice.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -180,7 +191,7 @@ class TestActivity : Activity(), RecognitionListener {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
 
-                if (count > 100) {
+                if (count > 12) {
                     stopProcess()
                 }
 
@@ -242,7 +253,7 @@ class TestActivity : Activity(), RecognitionListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode != RESULT_OK || data == null || data.getData() == null) {
+        if (resultCode != RESULT_OK || data == null || data.data == null) {
             // error
             return
         }
@@ -271,7 +282,6 @@ class TestActivity : Activity(), RecognitionListener {
 
 
         val isBackground = test_swBackground.isChecked
-        secDict = test_swDict.isChecked
 
         if (checkThresholdVal()) {
 
@@ -280,7 +290,6 @@ class TestActivity : Activity(), RecognitionListener {
                 val i = Intent(this, BackgroundService::class.java)
                 i.putExtra(BackgroundService.BG_WORD, word)
                 i.putExtra(BackgroundService.BG_THRESHOLD, "1e-${threshold}f")
-                i.putExtra(BackgroundService.BG_DICT, secDict)
                 startService(i)
 
 
@@ -378,7 +387,12 @@ class TestActivity : Activity(), RecognitionListener {
         setStatus(2)
 
 
-        recognizer?.startListening(word)
+        if (grammerSearch) {
+            recognizer?.startListening(DIGITS_SEARCH)
+        } else {
+            recognizer?.startListening(word)
+        }
+
 
     }
 
@@ -390,30 +404,55 @@ class TestActivity : Activity(), RecognitionListener {
     override fun onEndOfSpeech() {
         Log.d("VOICE_TAG", "onEndOfSpeech")
 
+
+        if (grammerSearch){
+            reset()
+        }
+
     }
 
     override fun onPartialResult(hypothesis: Hypothesis?) {
 
-        if (hypothesis == null)
-            return
+
+        if (!grammerSearch) {
+
+            if (hypothesis == null)
+                return
 
 
-        val text = hypothesis.hypstr
+            val text = hypothesis.hypstr
 
-        Log.d("VOICE_TAG", "onPartialResult $text")
-
-
-        resultText += "$resultText$text"
-        test_tvResults.text = resultText
+            Log.d("VOICE_TAG", "onPartialResult $text")
 
 
-        if (text == word) {
-            setStatus(3)
-            stopProcess()
-            showStartButton(true)
+            if (grammerSearch) {
+                test_tvResults.text = "Digits Grammer Matched : $text"
+                setStatus(3)
+                stopProcess()
+                showStartButton(true)
+                return
+            }
+
+
+            resultText += "$resultText$text"
+            test_tvResults.text = resultText
+
+            if (resultText.length > 12) {
+                setStatus(3)
+                stopProcess()
+                showStartButton(true)
+            }
+
+
+            if (text == word) {
+                setStatus(3)
+                stopProcess()
+                showStartButton(true)
+            } else if (text == DIGITS_SEARCH) {
+
+            }
+
         }
-
-
     }
 
 
@@ -435,6 +474,14 @@ class TestActivity : Activity(), RecognitionListener {
 
     override fun onResult(hypothesis: Hypothesis?) {
         Log.d("VOICE_TAG", "onResult")
+
+        if (grammerSearch) {
+
+            if (hypothesis != null) {
+                val text = hypothesis.hypstr
+                test_tvResults.text = "$text"
+            }
+        }
     }
 
     override fun onError(e: Exception) {
@@ -480,7 +527,7 @@ class TestActivity : Activity(), RecognitionListener {
 
         recognizer = defaultSetup()
                 .setAcousticModel(File(assetsDir, "en-us-ptm"))
-                .setDictionary(getDicFile(assetsDir))
+                .setDictionary(File(assetsDir, "cmudict-en-us.dict"))
                 .setKeywordThreshold(value)
                 .setBoolean("-allphone_ci", true)
                 .recognizer
@@ -489,13 +536,16 @@ class TestActivity : Activity(), RecognitionListener {
 
         recognizer?.addKeyphraseSearch(word, word)
 
+        val digitsGrammar = File(assetsDir, "digits.gram")
+        recognizer?.addGrammarSearch(DIGITS_SEARCH, digitsGrammar)
+
     }
 
-    private fun getDicFile(assetsDir: File) =  if (secDict) {
-        File(assetsDir, "sec_dict.dict")
-    } else {
-        File(assetsDir, "cmudict-en-us.dict")
-    }
+//    private fun getDicFile(assetsDir: File) =  if (secDict) {
+//        File(assetsDir, "sec_dict.dict")
+//    } else {
+//        File(assetsDir, "cmudict-en-us.dict")
+//    }
 
 
     private fun setStatus(status: Int) {
@@ -588,6 +638,11 @@ class TestActivity : Activity(), RecognitionListener {
     override fun onResume() {
         super.onResume()
         registerReceiver(broadcastReceiver, IntentFilter(BROADCAST_ACTION))
+    }
+
+    private fun reset() {
+        recognizer?.stop()
+        recognizer?.startListening(DIGITS_SEARCH)
     }
 
 }
