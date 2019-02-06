@@ -387,11 +387,11 @@ class TestActivity : Activity(), RecognitionListener {
         setStatus(2)
 
 
-        if (grammerSearch) {
-            recognizer?.startListening(DIGITS_SEARCH)
-        } else {
-            recognizer?.startListening(word)
-        }
+//            recognizer?.startListening(word)
+        recognizer?.startListening("start")
+        recognizer?.startListening("stop")
+        recognizer?.startListening("monkey")
+        recognizer?.startListening("computer")
 
 
     }
@@ -425,15 +425,6 @@ class TestActivity : Activity(), RecognitionListener {
             Log.d("VOICE_TAG", "onPartialResult $text")
 
 
-            if (grammerSearch) {
-                test_tvResults.text = "Digits Grammer Matched : $text"
-                setStatus(3)
-                stopProcess()
-                showStartButton(true)
-                return
-            }
-
-
             resultText += "$resultText$text"
             test_tvResults.text = resultText
 
@@ -448,9 +439,9 @@ class TestActivity : Activity(), RecognitionListener {
                 setStatus(3)
                 stopProcess()
                 showStartButton(true)
-            } else if (text == DIGITS_SEARCH) {
-
             }
+
+
 
         }
     }
@@ -534,10 +525,14 @@ class TestActivity : Activity(), RecognitionListener {
 
         recognizer?.addListener(this)
 
-        recognizer?.addKeyphraseSearch(word, word)
+//        recognizer?.addKeyphraseSearch(word, word)
+        recognizer?.addKeyphraseSearch("start", "start")
+        recognizer?.addKeyphraseSearch("stop", "stop")
+        recognizer?.addKeyphraseSearch("monkey", "monkey")
+        recognizer?.addKeyphraseSearch("computer", "computer")
 
-        val digitsGrammar = File(assetsDir, "digits.gram")
-        recognizer?.addGrammarSearch(DIGITS_SEARCH, digitsGrammar)
+//        val digitsGrammar = File(assetsDir, "digits.gram")
+//        recognizer?.addGrammarSearch(DIGITS_SEARCH, digitsGrammar)
 
     }
 
